@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: telemetry-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/telemetry_db
+    username: postgres
+    password: 22062004
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
