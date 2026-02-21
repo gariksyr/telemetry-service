@@ -1,18 +1,18 @@
 package com.thesis.telemetry_service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.thesis.telemetry_service.util.ValidImo;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -21,16 +21,14 @@ import java.time.LocalDateTime;
 public class Measurement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
     @NotBlank
-    String vesselImo;
-    @NotBlank
-    Double latitude;
-    @NotBlank
-    Double longitude;
-    @NotBlank
-    Double speed;
-    @NotBlank
-    @Timestamp
-    LocalDateTime timestamp;
+    @ValidImo
+    private String vesselImo;
+    @Column(columnDefinition = "geometry(Point, 4326)")
+    private Point location;
+    @NotNull
+    private Double speed;
+    @CreationTimestamp
+    private LocalDateTime timestamp;
 }
