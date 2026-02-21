@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,7 +32,7 @@ public class MeasurementService {
     }
     public Page<MeasurementResponseDTO> findByImo(String imo, Integer page, Integer size){
         Pageable pageable = PageRequest.of(page, size);
-        return measurementRepository.findMeasurementByImo(pageable, imo).map(src -> modelMapper.map(src, MeasurementResponseDTO.class));
+        return measurementRepository.findMeasurementByVesselImo(pageable, imo).map(src -> modelMapper.map(src, MeasurementResponseDTO.class));
     }
 
 }

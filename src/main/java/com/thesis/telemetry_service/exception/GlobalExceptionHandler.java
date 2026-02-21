@@ -1,6 +1,5 @@
 package com.thesis.telemetry_service.exception;
 
-import jakarta.validation.ConstraintViolationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
