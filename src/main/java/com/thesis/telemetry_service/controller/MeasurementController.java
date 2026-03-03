@@ -21,12 +21,17 @@ public class MeasurementController {
     }
     @GetMapping
     public ResponseEntity<Page<MeasurementResponseDTO>> findAll(@RequestParam(defaultValue = "0")  Integer page, @RequestParam(defaultValue = "20") Integer size){
-        return ResponseEntity.ok(measurementService.findall(page, size));
+        return ResponseEntity.ok(measurementService.findAll(page, size));
     }
     @GetMapping("/{imo}")
     public ResponseEntity<Page<MeasurementResponseDTO>> findMeasures(@PathVariable("imo") String imo,
                                                                      @RequestParam(value = "page", defaultValue = "0") Integer page,
                                                                      @RequestParam(value = "size", defaultValue = "20") Integer size){
         return ResponseEntity.ok(measurementService.findByImo(imo, page, size));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMeasurement(@PathVariable("id") Long id){
+        measurementService.deleteMeasurement(id);
+        return ResponseEntity.ok().build();
     }
 }

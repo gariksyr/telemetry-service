@@ -3,6 +3,7 @@ package com.thesis.telemetry_service.service;
 
 import com.thesis.telemetry_service.dto.MeasurementRequestDTO;
 import com.thesis.telemetry_service.dto.MeasurementResponseDTO;
+import com.thesis.telemetry_service.exception.EntityNotFoundException;
 import com.thesis.telemetry_service.model.Measurement;
 import com.thesis.telemetry_service.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class MeasurementService {
         measurementRepository.save(measurement);
         return modelMapper.map(measurement, MeasurementResponseDTO.class);
     }
-    public Page<MeasurementResponseDTO> findall(Integer page, Integer size){
+    public Page<MeasurementResponseDTO> findAll(Integer page, Integer size){
         Pageable pageable = PageRequest.of(page, size);
         return measurementRepository.findAll(pageable).map(src -> modelMapper.map(src, MeasurementResponseDTO.class));
     }
@@ -34,5 +35,9 @@ public class MeasurementService {
         Pageable pageable = PageRequest.of(page, size);
         return measurementRepository.findMeasurementByVesselImo(pageable, imo).map(src -> modelMapper.map(src, MeasurementResponseDTO.class));
     }
-
+    @Transactional
+    public void deleteMeasurement(Long id){
+        Measurement measurement = measurementRepository.findMeasurementById(id).orElseThrow(EntityNotFoundException::new);
+        measurementRepository.delete(measurement);
+    }
 }
