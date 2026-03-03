@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @AllArgsConstructor
 public class GlobalExceptionHandler{
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity<ErrorResponse> handlerException(EntityNotFoundException e){
-//        ErrorResponse err = new ErrorResponse("that vessel not found", System.currentTimeMillis());
-//        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
-//    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlerException(EntityNotFoundException e){
+        ErrorResponse err = new ErrorResponse("that vessel not found", System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
+    }
 //    @ExceptionHandler(EntityAlreadyExistException.class)
 //    public ResponseEntity<ErrorResponse> handlerException(EntityAlreadyExistException e){
 //        ErrorResponse err = new ErrorResponse("that vessel already exists", System.currentTimeMillis());
