@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MeasurementService {
     private final MeasurementRepository measurementRepository;
     private final ModelMapper modelMapper;
+    private final StringRedisTemplate stringRedisTemplate;
     @Transactional
     public MeasurementResponseDTO addMeasurement(MeasurementRequestDTO measurementRequestDTO) {
+        Boolean exists = stringRedisTemplate.hasKey("vessel:" + measurementRequestDTO.getVesselImo());
+        if(Boolean.FALSE.equals(exists)){
+            throw new EntityNotFoundException();
+        }
         Measurement measurement = modelMapper.map(measurementRequestDTO, Measurement.class);
         measurementRepository.save(measurement);
         return modelMapper.map(measurement, MeasurementResponseDTO.class);

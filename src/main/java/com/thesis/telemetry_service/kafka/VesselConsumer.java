@@ -1,19 +1,26 @@
 package com.thesis.telemetry_service.kafka;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class VesselConsumer {
-
+    private final StringRedisTemplate redisTemplate;
     @KafkaListener(topics = "vessels-topic", groupId = "telemetry-group")
     public void listen(String message) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("RECEIVED FROM KAFKA: " + message);
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         log.info("Received message from Kafka: {}", message);
-        // Тут мы будем сохранять IMO в Redis
+        redisTemplate.opsForValue().set(
+                "vessel:" + message,
+                "REGISTERED",
+                Duration.ofHours(24)
+        );
+        System.out.println("IMO " + message + " сохранен в Redis!");
     }
 }
