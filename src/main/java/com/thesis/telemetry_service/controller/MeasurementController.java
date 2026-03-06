@@ -34,4 +34,14 @@ public class MeasurementController {
         measurementService.deleteMeasurement(id);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/{imo}/near")
+    public ResponseEntity<Page<MeasurementResponseDTO>> getNear(
+            @PathVariable String imo,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam Double lat,
+            @RequestParam Double lon,
+            @RequestParam(defaultValue = "1000") Double radius) {
+        return ResponseEntity.ok(measurementService.findNear(page, size, imo, lat, lon, radius));
+    }
 }

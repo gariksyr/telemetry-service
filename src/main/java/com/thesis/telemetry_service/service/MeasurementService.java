@@ -46,4 +46,9 @@ public class MeasurementService {
         Measurement measurement = measurementRepository.findMeasurementById(id).orElseThrow(EntityNotFoundException::new);
         measurementRepository.delete(measurement);
     }
+    public Page<MeasurementResponseDTO> findNear(int page, int size, String imo, Double lat, Double lon, Double radiusInMeters) {
+        Pageable pageable = PageRequest.of(page, size);
+        return measurementRepository.findNearPoint(pageable, imo, lat, lon, radiusInMeters)
+                .map(m -> modelMapper.map(m, MeasurementResponseDTO.class));
+    }
 }
