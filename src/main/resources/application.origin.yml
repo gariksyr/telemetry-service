@@ -24,3 +24,7 @@ spring:
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     properties:
       request.timeout.ms: 30000
+  data:
+    redis:
+      host:
+      port:
