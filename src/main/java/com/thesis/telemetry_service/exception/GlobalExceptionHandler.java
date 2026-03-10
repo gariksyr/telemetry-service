@@ -5,9 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -26,7 +30,13 @@ public class GlobalExceptionHandler{
 //    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handlerException(MethodArgumentNotValidException e){
-        ErrorResponse err = new ErrorResponse("Invalid IMO", System.currentTimeMillis());
-        return new ResponseEntity<>(err, HttpStatus.NOT_ACCEPTABLE);
+        StringBuilder errorMessage = new StringBuilder();
+        BindingResult bindingResult = e.getBindingResult();
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for (FieldError error : errors){
+            errorMessage.append(error.getDefaultMessage()).append("; ");
+        }
+        ErrorResponse err = new ErrorResponse(errorMessage.toString(), System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }
