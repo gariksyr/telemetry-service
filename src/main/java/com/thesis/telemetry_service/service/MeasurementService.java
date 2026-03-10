@@ -51,4 +51,8 @@ public class MeasurementService {
         return measurementRepository.findNearPoint(pageable, imo, lat, lon, radiusInMeters)
                 .map(m -> modelMapper.map(m, MeasurementResponseDTO.class));
     }
+    public Page<MeasurementResponseDTO> getLatestPositions(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return measurementRepository.findLatestMeasurements(pageable).map(m -> modelMapper.map(m, MeasurementResponseDTO.class));
+    }
 }

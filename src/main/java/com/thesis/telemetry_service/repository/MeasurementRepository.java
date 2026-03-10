@@ -13,11 +13,15 @@ import java.util.Optional;
 public interface MeasurementRepository extends JpaRepository<Measurement,Long> {
     Page<Measurement> findMeasurementByVesselImo(Pageable page, String imo);
     Optional<Measurement> findMeasurementById(Long id);
-    //TODO проверить что Postgis стоит в контейнере докера и дополнить запрос тем что нейронка предложила
     @Query(value = """
         SELECT * FROM measurement 
         WHERE vessel_imo = :imo 
-        AND ST_DWithin(location, ST_SetSRID(ST_Point(:lon, :lat), 4326), :radius)
+        AND ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:lon, :lat), 4326)::geography, :radius)
         """, nativeQuery = true)
     Page<Measurement> findNearPoint(Pageable page, String imo, Double lat, Double lon, Double radius);
+    @Query(value = """
+    SELECT DISTINCT ON (vessel_imo) * FROM measurement 
+    ORDER BY vessel_imo, timestamp DESC
+    """, nativeQuery = true)
+    Page<Measurement> findLatestMeasurements(Pageable page);
 }

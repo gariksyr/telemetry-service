@@ -44,4 +44,11 @@ public class MeasurementController {
             @RequestParam(defaultValue = "1000") Double radius) {
         return ResponseEntity.ok(measurementService.findNear(page, size, imo, lat, lon, radius));
     }
+    @GetMapping("/latest")
+    public ResponseEntity<Page<MeasurementResponseDTO>> getLatest(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ){
+        return ResponseEntity.ok(measurementService.getLatestPositions(page, size));
+    }
 }
