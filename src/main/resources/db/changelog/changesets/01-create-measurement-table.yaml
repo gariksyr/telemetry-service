@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: your_name
+      changes:
+        - createTable:
+            tableName: measurement
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  autoIncrement: true
+              - column:
+                  name: vessel_imo
+                  type: VARCHAR(7)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: speed
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: timestamp
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+                    # Это аналог @CreationTimestamp на уровне базы
+                    defaultValueComputed: CURRENT_TIMESTAMP
+
+  - changeSet:
+      id: 2
+      author: your_name
+      changes:
+        - sql:
+            sql: >
+              ALTER TABLE measurement ADD COLUMN location geometry(Point, 4326);
+              CREATE INDEX idx_measurement_location ON measurement USING GIST (location);
