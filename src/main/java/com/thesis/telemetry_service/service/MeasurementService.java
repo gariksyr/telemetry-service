@@ -4,6 +4,7 @@ package com.thesis.telemetry_service.service;
 import com.thesis.telemetry_service.dto.MeasurementRequestDTO;
 import com.thesis.telemetry_service.dto.MeasurementResponseDTO;
 import com.thesis.telemetry_service.exception.EntityNotFoundException;
+import com.thesis.telemetry_service.kafka.TelemetryProducer;
 import com.thesis.telemetry_service.model.Measurement;
 import com.thesis.telemetry_service.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class MeasurementService {
     private final MeasurementRepository measurementRepository;
     private final ModelMapper modelMapper;
     private final StringRedisTemplate stringRedisTemplate;
+    private final TelemetryProducer telemetryProducer;
     @Transactional
     public MeasurementResponseDTO addMeasurement(MeasurementRequestDTO measurementRequestDTO) {
         Boolean exists = stringRedisTemplate.hasKey("vessel:" + measurementRequestDTO.getVesselImo());
@@ -31,6 +33,7 @@ public class MeasurementService {
         }
         Measurement measurement = modelMapper.map(measurementRequestDTO, Measurement.class);
         measurementRepository.save(measurement);
+        telemetryProducer.sendTelemetry(measurement);
         return modelMapper.map(measurement, MeasurementResponseDTO.class);
     }
     public Page<MeasurementResponseDTO> findAll(Integer page, Integer size){
