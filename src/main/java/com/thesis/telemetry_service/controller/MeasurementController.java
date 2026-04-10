@@ -24,7 +24,8 @@ public class MeasurementController {
     }
     @Operation(description = "Get all measurements")
     @GetMapping
-    public ResponseEntity<Page<MeasurementResponseDTO>> findAll(@RequestParam(defaultValue = "0")  Integer page, @RequestParam(defaultValue = "20") Integer size){
+    public ResponseEntity<Page<MeasurementResponseDTO>> findAll(@RequestParam(defaultValue = "0")  Integer page,
+                                                                @RequestParam(defaultValue = "20") Integer size){
         return ResponseEntity.ok(measurementService.findAll(page, size));
     }
     @Operation(description = "Find measurements by required IMO")
