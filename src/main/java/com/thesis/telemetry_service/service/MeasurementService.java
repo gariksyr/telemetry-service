@@ -6,6 +6,7 @@ import com.thesis.telemetry_service.dto.MeasurementResponseDTO;
 import com.thesis.telemetry_service.exception.EntityNotFoundException;
 import com.thesis.telemetry_service.kafka.TelemetryProducer;
 import com.thesis.telemetry_service.model.Measurement;
+import com.thesis.telemetry_service.repository.ImoRepository;
 import com.thesis.telemetry_service.repository.MeasurementRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -25,11 +28,23 @@ public class MeasurementService {
     private final ModelMapper modelMapper;
     private final StringRedisTemplate stringRedisTemplate;
     private final TelemetryProducer telemetryProducer;
+    private final ImoRepository imoRepository;
     @Transactional
     public MeasurementResponseDTO addMeasurement(MeasurementRequestDTO measurementRequestDTO) {
-        Boolean exists = stringRedisTemplate.hasKey("vessel:" + measurementRequestDTO.getVesselImo());
+        String imo = measurementRequestDTO.getVesselImo();
+        Boolean exists = stringRedisTemplate.hasKey("vessel:" + imo);
         if(Boolean.FALSE.equals(exists)){
-            throw new EntityNotFoundException();
+            exists = imoRepository.existsByImo(imo);
+            if (Boolean.FALSE.equals(exists)) {
+                throw new EntityNotFoundException();
+            }
+            else {
+                stringRedisTemplate.opsForValue().set(
+                        "vessel:" + imo,
+                        "REGISTERED",
+                        Duration.ofHours(24)
+                );
+            }
         }
         Measurement measurement = modelMapper.map(measurementRequestDTO, Measurement.class);
         measurementRepository.save(measurement);
