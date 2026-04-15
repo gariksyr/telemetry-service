@@ -9,4 +9,9 @@ public class MeasurementResponseDTO {
     private Double latitude;
     private Double longitude;
     private Double speed;
+    private Double temperature;
+    private Double humidity;
+    private Double pressure;
+    private Double windSpeed;
+    private Integer windDirection;
 }

@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changesets/01-create-measurement-table.yaml
   - include:
       file: db/changelog/changesets/02-create-imo-table.yml
+  - include:
+      file: db/changelog/changesets/03-add-weather-columns.yaml

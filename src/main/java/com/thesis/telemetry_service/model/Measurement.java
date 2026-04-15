@@ -30,4 +30,11 @@ public class Measurement {
     private Double speed;
     @CreationTimestamp
     private LocalDateTime timestamp;
+    private Double temperature;
+    private Double humidity;
+    private Double pressure;
+    @Column(name = "wind_speed")
+    private Double windSpeed;
+    @Column(name = "wind_direction")
+    private Integer windDirection;
 }

@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: garik
+      changes:
+        - addColumn:
+            tableName: measurement
+            columns:
+              - column: { name: temperature, type: DOUBLE PRECISION }
+              - column: { name: humidity, type: DOUBLE PRECISION }
+              - column: { name: pressure, type: DOUBLE PRECISION }
+              - column: { name: wind_speed, type: DOUBLE PRECISION }
+              - column: { name: wind_direction, type: INTEGER }
