@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ImoRepository extends JpaRepository<Imo, Long> {
     Boolean existsByImo(String imo);
+    void deleteByImo(String imo);
 }

@@ -17,8 +17,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-
 
 @Service
 @Transactional(readOnly = true)
@@ -29,6 +27,7 @@ public class MeasurementService {
     private final StringRedisTemplate stringRedisTemplate;
     private final TelemetryProducer telemetryProducer;
     private final ImoRepository imoRepository;
+    private final ImoService  imoService;
     @Transactional
     public MeasurementResponseDTO addMeasurement(MeasurementRequestDTO measurementRequestDTO) {
         String imo = measurementRequestDTO.getVesselImo();
@@ -39,11 +38,7 @@ public class MeasurementService {
                 throw new EntityNotFoundException();
             }
             else {
-                stringRedisTemplate.opsForValue().set(
-                        "vessel:" + imo,
-                        "REGISTERED",
-                        Duration.ofHours(24)
-                );
+                imoService.saveInRedisImo(imo);
             }
         }
         Measurement measurement = modelMapper.map(measurementRequestDTO, Measurement.class);
