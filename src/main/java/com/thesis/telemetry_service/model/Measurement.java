@@ -37,4 +37,12 @@ public class Measurement {
     private Double windSpeed;
     @Column(name = "wind_direction")
     private Integer windDirection;
+
+    public Double getLatitude() {
+        return location != null ? location.getY() : null;
+    }
+
+    public Double getLongitude() {
+        return location != null ? location.getX() : null;
+    }
 }
