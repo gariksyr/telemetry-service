@@ -25,10 +25,31 @@
     </style>
 </head>
 <body>
+<div th:replace="~{fragments :: navbar}"></div>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/dashboard" class="btn btn-outline-secondary">← К списку</a>
+    </div>
 
+</div>
+</body>
+<div th:if="${not #lists.isEmpty(alerts)}" class="mb-4">
+    <div th:each="alert : ${alerts}"
+         class="alert alert-dismissible fade show"
+         th:classappend="${alert.alertType == 'STORM' ? 'alert-danger' : 'alert-warning'}"
+         role="alert">
+
+        <strong>ВНИМАНИЕ!</strong>
+        <span th:text="${alert.alertType + ' - ' + alert.message}">Описание проблемы</span>
+
+        <span class="text-muted ms-2" th:text="${#temporals.format(alert.timestamp, 'dd-MM-yyyy HH:mm')}"></span>
+
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
 <div class="container">
     <div class="stats-header">
-        <h1>Дашборд судна IMO: <span th:text="${vesselImo}">0000000</span></h1>
+        <h1>Данные о судне IMO: <span th:text="${vesselImo}">0000000</span></h1>
     </div>
 
     <div class="dashboard-container" style="display: flex; flex-direction: column; gap: 30px; padding: 20px;">
@@ -73,7 +94,6 @@
             </table>
         </div>
     </div>
-</div>
 
 <script th:inline="javascript">
     window.onload = function() {
