@@ -15,7 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AlertServiceClient {
     private final RestTemplate restTemplate;
-    private final String ALERT_URL = "http://localhost:8082/api/v1/alerts/vessel/";
+    private final String ALERT_URL = "http://alert-service:8082/api/v1/alerts/vessel/";
 
     public List<AlertResponseDTO> getAlerts(String imo) {
         try {
